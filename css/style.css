@@ -1,0 +1,222 @@
+﻿/* PAGE COLORS
+
+--jQuery--
+228EF1 - Blue
+2E83FF - Darker Blue
+8DC262 - Light Green
+847E71 - Light Gray
+454545 - Super Dark Gray
+808080 - Super Light Gray
+CD0A0A - Red
+EF8C08 - Orange
+FFD27A - Light Orange
+
+
+*/
+
+body { font-family: Verdana, Arial, Helvetica, sans-serif; 
+       font-size: 11px; /*14px*/
+       font-weight: normal;
+       color:#333;
+       background:#fefefe;
+       padding:0px;
+       margin:0px;
+       /*text-decoration: none;
+       margin: 20px 0px;
+       padding: 0px;
+       text-align: center;
+       background-color: #3F8C12;*/
+       }
+        
+img { border: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px; }
+span { cursor:pointer; }
+span.BlueOnWhite:hover {cursor:pointer; color:blue; background-color:white;}
+span.WhiteOnBlue:hover { cursor:pointer; color:white; background-color:blue;}
+fieldset {background:white;} 
+hr {margin:0px;}
+
+#DialogFormDiv label{display:inline-block; width:100px; padding-left:30px;}
+
+#SettingItems { border:1px solid #ccc; margin:0px 0px 10px 0px; }
+#SettingItems label { display:inline-block; width:135px; text-align:right; margin-right:5px; font-weight:bold; }
+#SettingItems textarea { vertical-align:top; }
+
+.link { color:#2E83FF; text-decoration:none; }
+.link:visited { color:#2E83FF; }
+.link:hover, .link:active { color:#EF8C08; text-decoration:none; }
+
+/* Classes */
+        
+        table.MainStyle { border-collapse:collapse; background-color:#fff; }
+        table.MainStyle th { background-color:green; border:1px solid #ddd; padding:5px; color:#fff; }
+        table.MainStyle tr:hover { background-color:#80c8e5; }
+        table.MainStyle td { border:1px solid #ddd; padding:5px; }
+        
+        table.TransferList { border-collapse:collapse; }
+        table.TransferList th { background-color:green; border:1px solid #DDDDDD; padding:5px; color:#FFFFFF; }
+        table.TransferList td { border:1px solid #DDDDDD; }
+        table.TransferList td.serialNumber { padding:0px 0px 0px 5px; }
+        table.TransferList td.checkboxes { text-align:center; }
+        table.TransferList tr:hover { background-color:#80C8E5; }
+        
+        table.TrunkIDAndSerialNumberClass {border-collapse:collapse;}
+        table.TrunkIDAndSerialNumberClass th {background-color:Green; color:#FFFFFF; padding:5px; border:1px solid #CCCCCC; }
+        table.TrunkIDAndSerialNumberClass tr:hover {background-color:#80C8E5; cursor:pointer;}                                
+        table.TrunkIDAndSerialNumberClass td {padding:2px 0px 2px 10px; border:1px solid #CCCCCC; }
+        
+        table.ReplacementPlanTable{width:100%; border-collapse:collapse; border:1px solid #000; margin-bottom:20px;}
+        table.ReplacementPlanTable th {border-collapse:collapse; border:1px solid #000;border-bottom:1px solid #000;background-color:#eee;}
+        table.ReplacementPlanTable th.THSerialNum {width:15%;}
+        table.ReplacementPlanTable th.THModelNum {width:15%;}
+        table.ReplacementPlanTable th.THModelDesc {width:30%;}
+        table.ReplacementPlanTable th.THHW {width:6%;}
+        table.ReplacementPlanTable tr {}
+        table.ReplacementPlanTable td {border-collapse:collapse; border:1px solid #000; padding-left:8px;}
+        table.ReplacementPlanTable td.cost {border-collapse:collapse; border:1px solid #000; padding-right:8px; text-align:right;}
+        table.ReplacementPlanTable td.TDHW {border-collapse:collapse; border:1px solid #000; padding-right:8px; text-align:center;}
+        
+        table.SearchResultsTable {border-collapse:collapse; width:90%; }
+        table.SearchResultsTable th {background-color:#2E83FF; color:White; padding:3px; border:1px solid #ddd;}
+        table.SearchResultsTable #SNID_Account { width:60px; }
+        table.SearchResultsTable #SNID_TrunkID { width:75px; }
+        table.SearchResultsTable tr { }
+        table.SearchResultsTable tr:hover {background-color:#eee; cursor:pointer;}                 
+        table.SearchResultsTable td {border-collapse:collapse; border: 1px solid #ddd;}
+        
+        table.AccountListTableClass tr:hover {cursor:pointer;}
+        
+        table.WhiteIconLayout {}
+        table.WhiteIconLayout td { border-collapse:collapse; background-color:#fff; color:Blue; border:2px solid gray; }
+        table.WhiteIconLayout td:hover { border:2px solid #80C8E5; cursor:pointer; }
+        table.WhiteIconLayout img { height:26px; width:26px; }
+        
+        table.ReplacementPlanHeader { width:100%; border-collapse:collapse; }
+        table.ReplacementPlanHeader td { border-collapse:collapse; border:1px solid black; padding:5px 10px 5px 10px; }
+        table.ReplacementPlanHeader th { border-collapse:collapse; border:1px solid black; background-color:Aqua; text-align:center; font-weight:bolder; font-size:16px; padding:5px; }
+        
+        td.ReplacementPlanHeader_Account { width:50%; font-size:14px; }
+        td.ReplacementPlanHeader_Account label { display:inline-block; width:125px; text-align:right; margin:0px 5px 0px 0px; }
+        td.ReplacementPlanHeader_Account span { font-weight:bold; }
+        td.ReplacementPlanHeader_Date { text-align:center; font-size:14px; }
+        td.ReplacementPlanHeader_Total { font-weight:bold; text-align:center; }
+        td.ReplacementPlanHeader_TotalCost { font-weight:bold; font-size:16px; text-align:center; }
+        
+        td.ReplacementPlan_Upgrade{ background-color:Yellow; font-size:large; text-align:center; padding:5px; }
+        td.ReplacementPlan_Replace{ background-color:Red; color:White; font-size:large; text-align:center; padding:5px; }
+        td.ReplacementPlan_Compatible{ background-color:Green; color:White; font-size:large; text-align:center; padding:5px; }
+        td.ReplacementPlan_Unknown{ background-color:Blue; color:White; font-size:large; text-align:center; padding:5px; }
+        
+        div.O-Auto { overflow:auto; }
+        
+        .head {background-color: #333; color: #FFFFFF;}
+        .tr_total {border-collapse:collapse;}
+        .tr_total td {background-color: white; border-top:2px solid black;}
+        .borderOnly { border:1px solid #555; }
+        .lightGrayBorder { border:1px solid #888; padding:5px; }
+        .grayRow { background-color:#BBBBBB; border:1px solid #555; }
+        .lightRed { background-color:#FF9999; border:1px solid #555; }
+        .lightYellow { background-color:#FFFF99; border:1px solid #555; }
+        .lightGreen { background-color:#99FF99; border:1px solid #555; }
+        .selectedRow { background-color:#80C8E5;}
+        .MinimumHeading{ line-height:10%;}    
+        .MaintenanceDescription{ max-width: 200px;}    
+        .DeleteDiv { float:right; display:none; }
+        .SmallFont { font-size:8px; }
+        .SmallText { font-weight:normal; font-size:10px; color:#777; }
+        .RedText { color:Red; }
+        .DivHover { background-color:#EFFAFF; }
+        .ValidateTips { padding:3px; }
+        .Form { padding-left:10px; }
+        .FormLabel { font-weight:bold; font-size:14px; }
+        .DialogLabel { display:inline-block; width:150px; font-weight:bold; text-align:right; padding-right:5px; }
+        .HeaderText { font-weight:bold; font-size:18px; /* color:#555 */ }
+        .ColorHover { color:Red; }
+        .LightGray { background-color:#ccc; }
+        .BlackOnWhite { border:1px solid #888; background-color:#fff; padding:5px; }
+        
+        .SpanError { cursor:default; color:Red; font-weight:bold; }
+        .SpanStrong { cursor:default; font-weight:bold; font-size:1.1em; }
+        
+        /*This class is used to style a div with shows a "processing" message and graphic*/
+        .Processing { border:1px solid #888; background-color:#fff; background: #fff url("../images/CircleBallSpinnerTransparent.gif") no-repeat 10px 50%; padding:5px 10px 5px 30px; margin:0px 10px 0px 10px; text-align:left; }
+        
+        .HardwareMods { padding-left:5px; }
+        .HardwareMods .HM-Item { margin:0px 0px 20px 0px; padding:5px; background-color:#fff; width:380px; border:1px solid #888; }
+        .HardwareMods .HM-Item span { font-weight:bold; }
+        
+        /*This class is used to style a div element to fake an <hr /> tag*/
+        .Seperator { border:1px solid #888; background-color:#888; }
+        
+        /*This class is used for comments to the user*/
+        .Comment { font-weight:normal; font-style:italic; color:#777; } 
+        
+        .PageNavigation {  }
+        .PageNavigation div { float:left; border-right:1px solid #FFF; padding:5px 10px 5px 10px; background-color:#FF9900; color:#FFF; font-size:14px; font-weight:bold; }                               
+        .PageNavigation div:hover { background-color:#FFCC00; cursor:pointer; color:#777; }
+        
+        /*
+        .PageHeaderContent {  }
+        .PageHeaderContent .UserInformation { background-color:#aaa; color:#fff; text-align:right; padding:5px 15px 5px 0px; border:1px solid #888; }
+        .PageHeaderContent .PageTitleInformation { text-align:center; font-size:30px; font-weight:bold; padding:10px; }
+        */
+        
+        .KendoTableHeader { text-align:center; font-weight:bold; }
+        
+/*This section defines the css needed to create the loading effect on any div
+you can find more loading graphics for free at - http://ajaxload.info 
+for this to work you need to have an element such as a div with a class of .blankContainer
+then you would add the class .addLoader for as long as you want the user to see the effect - MCP*/
+.blankContainer { position:relative; }
+.addLoader { position:absolute; top:0; left:0; width:100%; height:100%;
+             filter: alpha(opacity=80);
+             background: #fff url("../images/CircleBallSpinner.gif") no-repeat 50%; 
+}           
+        
+
+.shade { -moz-box-shadow: 0px 0px 18px #000000; -webkit-box-shadow: 0px 0px 18px #000000;
+         filter: progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=145, Strength=3);
+            /*border-radius: 8px;
+            -moz-border-radius: 8px;
+            -webkit-border-radius: 8px;
+            box-shadow: 0px 0px 18px #000000;*/
+        }
+      
+/* changes to JQuery theme */
+.ui-widget-header { border: 1px solid #e78f08; background: #a9c6c3 url(images/ui-bg_gloss-wave_36_a9c6c3_500x100.png) 50% 50% repeat-x; color: #ffffff; font-weight: bold; }
+
+@media print {
+  #PageSettingsDiv { display:none; }
+}
+
+/*Custom Section MCP*/
+
+    /*Little white X circle*/
+    .ui-icon-WhiteXCircle { width: 16px; height: 16px; background-image: url(south-street/images/ui-icons_ffffff_256x240.png); background-position: -32px -192px; cursor:pointer;}
+    
+    /*Little red X circle*/ 
+    .ui-icon2 { width: 16px; height: 16px; background-image: url(south-street/images/ui-icons_cd0a0a_256x240.png); background-position: -32px -192px; cursor:pointer;}
+    
+    /*Little green + circle*/ 
+    .ui-icon3 { width: 16px; height: 16px; background-image: url(south-street/images/ui-icons_8dc262_256x240.png); background-position: 0 -192px; cursor:pointer;}
+
+    /*Little orange clipboard*/ 
+    .clipboard { width: 16px; height: 16px; background-image: url(south-street/images/ui-icons_ef8c08_256x240.png); background-position: -160px -128px; cursor:pointer;}
+
+    /*styles a div to have a light green background and a dark green border*/
+    .ui-state-validated {border: 1px solid #00c774; background: #b5ffe0; color: #333333; }
+    
+    .prepCheck  { width:20px; height:20px; background-color:transparent; }
+    
+    .validCheck { width:20px; height:20px; background-image:url(../images/icon_grid.png); background-position: -40px -40px; }
+    
+    .warningCheck { width:20px; height:20px; background-image:url(../images/icon_grid.png); background-position: -140px -60px; }
+    
+    .invalidCheck { width:20px; height:20px; background-image:url(../images/icon_grid.png); background-position: -60px -40px; }
+    
+    .newItem { width:20px; height:20px; background-image:url(../images/icon_grid.png); background-position: -360px -160px; }
+    
+    /*Override the jQuery overlay to use a different background image, specifically targeting dialog boxes*/
+    .ui-widget-overlay { background: #2b2922 url(south-street/images/ui-bg_diagonals-thick_20_666666_40x40.png); }
+    
+/*Custom Section MCP*/
+

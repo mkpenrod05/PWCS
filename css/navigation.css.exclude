@@ -1,0 +1,10 @@
+﻿.menu2 {padding:0 0 0 32px; margin:0; list-style:none; height:35px; background:#fff url(../images/button1.gif); position:relative; border:1px solid #000; border-width:0 1px; border-bottom:1px solid #444;}
+.menu2 li {float:left;}
+.menu2 li a {display:block; float:left; height:35px; line-height:35px; color:#aaa; text-decoration:none; font-size:11px; font-family:arial, verdana, sans-serif; font-weight:bold; text-align:center; padding:0 0 0 8px; cursor:pointer;}
+.menu2 li a b {float:left; display:block; padding:0 16px 0 8px;}
+.menu2 li.current a {color:#fff; background:url(../images/button3.gif);}
+.menu2 li.current a b {background:url(../images/button3.gif) no-repeat right top;}
+.menu2 li a:hover {color:#fff; background:#000 url(../images/button4.gif);}
+.menu2 li a:hover b {background:url(../images/button4.gif) no-repeat right top;}
+.menu2 li.current a:hover {color:#fff; background:#000 url(../images/button3.gif); cursor:default;}
+.menu2 li.current a:hover b {background:url(../images/button3.gif) no-repeat right top;}
