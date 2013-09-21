@@ -10,10 +10,10 @@
     
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         
-        If UserValidation.PageAccess(HttpContext.Current.Request.ServerVariables("AUTH_USER").ToLower()) = False Then
-            Response.Write("Access Denied!")
-            Response.End()
-        End If
+        'If UserValidation.PageAccess(HttpContext.Current.Request.ServerVariables("AUTH_USER").ToLower()) = False Then
+        '    Response.Write("Access Denied!")
+        '    Response.End()
+        'End If
         
         If IsPostBack Then
             Dim NewUpgradeCost As Integer = Request.Form("UpgradeCostInput")

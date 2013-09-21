@@ -239,7 +239,8 @@ Public Class WebServiceFunctions
             With objCommand.Parameters
                 .Add(New SqlParameter("@Status", Status))
                 .Add(New SqlParameter("@ManagerID", ManagerID))
-                .Add(New SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -711,8 +712,13 @@ Public Class WebServiceFunctions
                 .Add(New System.Data.SqlClient.SqlParameter("@NewOrg", NewOrg.Trim()))
                 .Add(New System.Data.SqlClient.SqlParameter("@NewPhone", NewPhone.Trim()))
                 .Add(New System.Data.SqlClient.SqlParameter("@NewEmail", NewEmail.Trim()))
-                If NewTrainingDate = "" Then .Add(New System.Data.SqlClient.SqlParameter("@NewTrainingDate", DBNull.Value)) Else .Add(New System.Data.SqlClient.SqlParameter("@NewTrainingDate", CDate(NewTrainingDate.Trim())))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                If NewTrainingDate = "" Then
+                    .Add(New SqlParameter("@NewTrainingDate", DBNull.Value))
+                Else
+                    .Add(New SqlParameter("@NewTrainingDate", CDate(NewTrainingDate.Trim())))
+                End If
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -769,9 +775,9 @@ Public Class WebServiceFunctions
         Status = HtmlEncode(Status)
         Account = HtmlEncode(Account)
 
-        Dim objConnection As System.Data.SqlClient.SqlConnection
-        objConnection = New System.Data.SqlClient.SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
-        Dim objCommand As System.Data.SqlClient.SqlCommand
+        Dim objConnection As SqlConnection
+        objConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+        Dim objCommand As SqlCommand
 
         Dim strSQLQuery As String = ""
         Dim Action As String = ""
@@ -790,9 +796,9 @@ Public Class WebServiceFunctions
             objCommand = New System.Data.SqlClient.SqlCommand(strSQLQuery, objConnection)
 
             With objCommand.Parameters
-                .Add(New System.Data.SqlClient.SqlParameter("@Account", Account))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
+                .Add(New SqlParameter("@Account", Account))
+                .Add(New SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
             Dim objDataReader As System.Data.SqlClient.SqlDataReader
@@ -864,12 +870,12 @@ Public Class WebServiceFunctions
             Reason = "Updated Account First Email Appointment Letter Date"
 
         ElseIf id.StartsWith("EmailAppointmentLetter2_") Then
-            DataColumn = "email_appt_ltr_1"
+            DataColumn = "email_appt_ltr_2"
             RecordNumber = id.Replace("EmailAppointmentLetter2_", "")
             Reason = "Updated Account Second Email Appointment Letter Date"
 
         ElseIf id.StartsWith("EmailAppointmentLetter3_") Then
-            DataColumn = "email_appt_ltr_1"
+            DataColumn = "email_appt_ltr_3"
             RecordNumber = id.Replace("EmailAppointmentLetter3_", "")
             Reason = "Updated Account Third Email Appointment Letter Date"
 
@@ -943,7 +949,8 @@ Public Class WebServiceFunctions
                     .Add(New System.Data.SqlClient.SqlParameter("@DataColumn", DBNull.Value))
                 End If
                 .Add(New System.Data.SqlClient.SqlParameter("@RecordNumber", RecordNumber))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1051,7 +1058,8 @@ Public Class WebServiceFunctions
                     .Add(New System.Data.SqlClient.SqlParameter("@DataColumn", DBNull.Value))
                 End If
                 .Add(New System.Data.SqlClient.SqlParameter("@RecordNumber", RecordNumber))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1177,7 +1185,8 @@ Public Class WebServiceFunctions
                     .Add(New System.Data.SqlClient.SqlParameter("@DataColumn", DBNull.Value))
                 End If
                 .Add(New System.Data.SqlClient.SqlParameter("@RecordNumber", RecordNumber))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1248,7 +1257,8 @@ Public Class WebServiceFunctions
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@NewValue", new_value))
                 .Add(New System.Data.SqlClient.SqlParameter("@RecordID", RecordID))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1356,7 +1366,8 @@ Public Class WebServiceFunctions
                 .Add(New System.Data.SqlClient.SqlParameter("@AIMModelNumber", AIMModelNumber.Trim()))
                 .Add(New System.Data.SqlClient.SqlParameter("@AIMModelDescription", AIMModelDescription.Trim()))
                 .Add(New System.Data.SqlClient.SqlParameter("@AIMStatusCode", "11"))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1452,12 +1463,11 @@ Public Class WebServiceFunctions
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@serialNumber", serialNumber.ToUpper()))
                 .Add(New System.Data.SqlClient.SqlParameter("@invoiceNumber", invoiceNumber))
-                '.Add(New System.Data.SqlClient.SqlParameter("@newDate", newDate))
-                '.Add(New System.Data.SqlClient.SqlParameter("@dateOfAction", Data.SqlDbType.Date))
                 .Add(New System.Data.SqlClient.SqlParameter("@dateOfAction", CDate(dateOfAction)))
                 .Add(New System.Data.SqlClient.SqlParameter("@description", description))
                 .Add(New System.Data.SqlClient.SqlParameter("@cost", cost))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 ' do not need to insert modified_date, current date is set by default in the database
             End With
 
@@ -1639,7 +1649,9 @@ Public Class WebServiceFunctions
                     .Add(New System.Data.SqlClient.SqlParameter("@TransferDate", CDate(TransferDate)))
                 End If
 
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
+                'date of insert is entered automatically by default in the database
             End With
 
             Dim objDataReader As System.Data.SqlClient.SqlDataReader
@@ -1695,7 +1707,8 @@ Public Class WebServiceFunctions
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@TransferNumber", TransferNumber))
                 .Add(New System.Data.SqlClient.SqlParameter("@SerialNumber", SerialNumber))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
             End With
 
             Dim objDataReader As System.Data.SqlClient.SqlDataReader
@@ -1756,7 +1769,8 @@ Public Class WebServiceFunctions
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@TransferNumber", TransferNumber))
                 .Add(New System.Data.SqlClient.SqlParameter("@Cancelled", Cancelled))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1910,7 +1924,8 @@ Public Class WebServiceFunctions
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@TransferValue", TransferValue))
                 .Add(New System.Data.SqlClient.SqlParameter("@TransferNumber", TransferNumber))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1997,7 +2012,8 @@ Public Class WebServiceFunctions
                 .Add(New System.Data.SqlClient.SqlParameter("@AccountCode", AccountCode))
                 .Add(New System.Data.SqlClient.SqlParameter("@Unit", Unit))
                 .Add(New System.Data.SqlClient.SqlParameter("@AccountComments", AccountComments))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -2115,7 +2131,8 @@ Public Class WebServiceFunctions
                 .Add(New System.Data.SqlClient.SqlParameter("@OTAR", OTAR))
                 .Add(New System.Data.SqlClient.SqlParameter("@OTAP", OTAP))
                 .Add(New System.Data.SqlClient.SqlParameter("@AssetComments", AssetComments))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -2215,7 +2232,8 @@ Public Class WebServiceFunctions
                 .Add(New System.Data.SqlClient.SqlParameter("@OldRecordID", OldRecordID))
                 .Add(New System.Data.SqlClient.SqlParameter("@NewTrunkID", NewTrunkID))
                 .Add(New System.Data.SqlClient.SqlParameter("@NewRecordID", NewRecordID))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -2351,8 +2369,6 @@ Public Class WebServiceFunctions
 
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@SerialNumber", SerialNumber))
-                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
-                '.Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
             Dim objDataReader As System.Data.SqlClient.SqlDataReader
@@ -2437,8 +2453,6 @@ Public Class WebServiceFunctions
 
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@SerialNumber", SerialNumber))
-                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
-                '.Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
             Dim objDataReader As System.Data.SqlClient.SqlDataReader

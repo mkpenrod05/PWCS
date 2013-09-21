@@ -562,7 +562,8 @@ Public Class CustomFunctions
 
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@SerialNumber", SerialNumber.Trim()))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -696,7 +697,8 @@ Public Class CustomFunctions
             With objCommand.Parameters
                 .Add(New System.Data.SqlClient.SqlParameter("@Account", Account))
                 .Add(New System.Data.SqlClient.SqlParameter("@Status", Status))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
@@ -1009,7 +1011,8 @@ Public Class CustomFunctions
                 .Add(New System.Data.SqlClient.SqlParameter("@Reason", Reason))
                 .Add(New System.Data.SqlClient.SqlParameter("@OldValue", OldValue))
                 .Add(New System.Data.SqlClient.SqlParameter("@NewValue", NewValue))
-                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New System.Data.SqlClient.SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", UserValidation.AccessedByUser()))
                 ' do not need to insert modified_date, current date is set by default in the database
             End With
 
@@ -1223,7 +1226,9 @@ Public Class CustomFunctions
                 .Add(New SqlParameter("@SettingPage", SettingPage))
                 .Add(New SqlParameter("@SettingName", SettingName))
                 .Add(New SqlParameter("@SettingValue", SettingValue))
-                .Add(New SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                '.Add(New SqlParameter("@modified_by", HttpContext.Current.Request.ServerVariables("AUTH_USER")))
+                .Add(New System.Data.SqlClient.SqlParameter("@modified_by", UserValidation.AccessedByUser()))
+                .Add(New System.Data.SqlClient.SqlParameter("@modified_date", Now.ToShortDateString))
             End With
 
             objConnection.Open()

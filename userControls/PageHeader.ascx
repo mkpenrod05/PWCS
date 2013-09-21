@@ -3,7 +3,7 @@
 <script runat="server">
     Protected Sub Page_Header(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         
-        Dim User As String = HttpContext.Current.Request.ServerVariables("AUTH_USER")
+        
         Dim Server As String = HttpContext.Current.Request.ServerVariables("SERVER_NAME")
         Dim TextStyle = ""
         

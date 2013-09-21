@@ -25,4 +25,21 @@ Public Class UserValidation
 
     End Function
 
+    Public Shared Function AccessedByUser() As String
+
+        Dim User As String = HttpContext.Current.Request.ServerVariables("AUTH_USER")
+        Dim Server As String = HttpContext.Current.Request.ServerVariables("SERVER_NAME")
+
+        If User.Length < 1 Then
+            If (Server.Contains("localhost")) Then
+                User = ConfigurationManager.AppSettings("Admin")
+            Else
+                User = ConfigurationManager.AppSettings("Guest")
+            End If
+        End If
+
+        Return User
+
+    End Function
+
 End Class
