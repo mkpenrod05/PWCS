@@ -26,7 +26,7 @@ Public Class WebService
     
     <WebMethod()> _
     Public Function AccountList() As String
-        Return WebServiceFunctions.AccountList()
+        'Return WebServiceFunctions.AccountList()
     End Function
     
     <WebMethod()> _
@@ -36,7 +36,7 @@ Public Class WebService
     
     <WebMethod()> _
     Public Function TrunkIdAndSerialNumber(ByVal Account As String) As String
-        Return WebServiceFunctions.TrunkIdAndSerialNumber(Account)
+        'Return WebServiceFunctions.TrunkIdAndSerialNumber(Account)
     End Function
     
     <WebMethod()> _

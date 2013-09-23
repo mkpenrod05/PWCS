@@ -29,7 +29,7 @@ body { font-family: Verdana, Arial, Helvetica, sans-serif;
        }
         
 img { border: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px; }
-span { cursor:pointer; }
+/*span { cursor:pointer; }*/
 span.BlueOnWhite:hover {cursor:pointer; color:blue; background-color:white;}
 span.WhiteOnBlue:hover { cursor:pointer; color:white; background-color:blue;}
 fieldset {background:white;} 
@@ -41,9 +41,8 @@ hr {margin:0px;}
 #SettingItems label { display:inline-block; width:135px; text-align:right; margin-right:5px; font-weight:bold; }
 #SettingItems textarea { vertical-align:top; }
 
-.link { color:#2E83FF; text-decoration:none; }
-.link:visited { color:#2E83FF; }
-.link:hover, .link:active { color:#EF8C08; text-decoration:none; }
+.link, .link:visited { color:#2E83FF; text-decoration:none; }
+.link:hover, .link:active { color:#EF8C08; }
 
 /* Classes */
         
@@ -83,7 +82,7 @@ hr {margin:0px;}
         table.SearchResultsTable tr:hover {background-color:#eee; cursor:pointer;}                 
         table.SearchResultsTable td {border-collapse:collapse; border: 1px solid #ddd;}
         
-        table.AccountListTableClass tr:hover {cursor:pointer;}
+        /* table.AccountListTableClass tr:hover { cursor:pointer; background-color:#80C8E5; } */
         
         table.WhiteIconLayout {}
         table.WhiteIconLayout td { border-collapse:collapse; background-color:#fff; color:Blue; border:2px solid gray; }

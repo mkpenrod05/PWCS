@@ -8,20 +8,78 @@ Imports System.Web.Script.Serialization
 Public Class WebServiceFunctions
     'Converted to Stored Procedure - YES
     'Pushed to Production - YES
-    Public Shared Function AccountList() As String
+    'Public Shared Function AccountList() As String
+
+    '    Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+    '    'This SQLCommand needs to be the name of the stored procedure
+    '    Dim objCommand As New SqlCommand("SelectActiveAccountList")
+
+    '    objCommand.CommandType = Data.CommandType.StoredProcedure
+    '    objCommand.Connection = objConnection
+
+    '    Dim str As String = ""
+    '    Dim AppointmentLetterTD As String = ""
+    '    Dim InventoryTD As String = ""
+    '    Dim ReplacementPlanTD As String = ""
+    '    Dim counter As Integer = 0
+
+    '    Try
+    '        'these parameters must match the paramters set in the stored procedure
+    '        With objCommand.Parameters
+    '            '.Add(New SqlParameter("@GLCode", GLCode))
+    '        End With
+
+    '        objConnection.Open()
+
+    '        Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
+
+    '        str = str & "<div class='FormLabel' style='text-align:center; border-bottom:1px solid #333; margin-bottom:5px;'>Accounts</div>"
+    '        str = str & "<table id='AccountListTable' class='AccountListTableClass'>"
+
+    '        If objDataReader.HasRows Then
+
+    '            While objDataReader.Read()
+    '                If objDataReader("account_code").ToString <> "" Or objDataReader("account_code").ToString Is DBNull.Value Then
+    '                    str = str & "<tr id='" & objDataReader("account_code") & "'>" & _
+    '                        "<td><b>" & objDataReader("account_code").ToString & "</b></td>" & _
+    '                        "<td class='SmallFont " & StyleChange.SetColor(objDataReader("appt_ltr").ToString) & "' style=''>A</td>" & _
+    '                        "<td class='SmallFont " & StyleChange.SetColor(objDataReader("inventory").ToString) & "' style=''>I</td>" & _
+    '                        "<td class='SmallFont " & StyleChange.SetColor(objDataReader("account_validation").ToString) & "' style=''>R</td>" & _
+    '                        "</tr>"
+    '                End If
+    '                counter = counter + 1
+    '            End While
+
+    '        Else
+
+    '            str = str & "<tr><td>No Records Found!</td></tr>"
+
+    '        End If
+
+    '        objDataReader.Close()
+
+    '        str = str & "</table>"
+
+    '    Catch ex As Exception
+    '        str = "Error: " & ex.Message
+    '    Finally
+    '        objConnection.Close()
+    '    End Try
+
+    '    Return str
+
+    'End Function
+
+    Public Shared Function AccountListRevised() As List(Of ClassModels.Account)
 
         Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
         'This SQLCommand needs to be the name of the stored procedure
         Dim objCommand As New SqlCommand("SelectActiveAccountList")
-
         objCommand.CommandType = Data.CommandType.StoredProcedure
         objCommand.Connection = objConnection
 
-        Dim str As String = ""
-        Dim AppointmentLetterTD As String = ""
-        Dim InventoryTD As String = ""
-        Dim ReplacementPlanTD As String = ""
-        Dim counter As Integer = 0
+        Dim ListOfAccounts As New List(Of ClassModels.Account)
+        Dim AccountError As New ClassModels.Account
 
         Try
             'these parameters must match the paramters set in the stored procedure
@@ -33,111 +91,347 @@ Public Class WebServiceFunctions
 
             Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
 
-            str = str & "<div class='FormLabel' style='text-align:center; border-bottom:1px solid #333; margin-bottom:5px;'>Accounts</div>"
-            str = str & "<table id='AccountListTable' class='AccountListTableClass'>"
-
             If objDataReader.HasRows Then
 
                 While objDataReader.Read()
-                    If objDataReader("account_code").ToString <> "" Or objDataReader("account_code").ToString Is DBNull.Value Then
-                        str = str & "<tr id='" & objDataReader("account_code") & "'>" & _
-                            "<td><b>" & objDataReader("account_code").ToString & "</b></td>" & _
-                            "<td class='SmallFont " & StyleChange.SetColor(objDataReader("appt_ltr").ToString) & "' style=''>A</td>" & _
-                            "<td class='SmallFont " & StyleChange.SetColor(objDataReader("inventory").ToString) & "' style=''>I</td>" & _
-                            "<td class='SmallFont " & StyleChange.SetColor(objDataReader("account_validation").ToString) & "' style=''>R</td>" & _
-                            "</tr>"
-                    End If
-                    counter = counter + 1
+
+                    Dim Account As New ClassModels.Account(objDataReader("account_code"))
+                    ListOfAccounts.Add(Account)
+
                 End While
 
             Else
 
-                str = str & "<tr><td>No Records Found!</td></tr>"
+                AccountError.IsError = True
+                AccountError.Message = "No account records found!"
+                ListOfAccounts.Add(AccountError)
 
             End If
 
             objDataReader.Close()
 
-            str = str & "</table>"
-
         Catch ex As Exception
-            str = "Error: " & ex.Message
+            AccountError.IsError = True
+            AccountError.Message = "Error: " & ex.Message
+            ListOfAccounts.Add(AccountError)
         Finally
             objConnection.Close()
         End Try
+
+        Return ListOfAccounts
+
+    End Function
+
+    Public Shared Function AccountListDisplay() As String
+
+        Dim ListOfAccounts As New List(Of ClassModels.Account)
+        Dim str As String = ""
+
+        ListOfAccounts = WebServiceFunctions.AccountListRevised
+
+        str = str & "<table id='AccountListTable' class='AccountListTableClass'>"
+
+        For Each Account In ListOfAccounts
+
+            If Account.IsError = False Then
+
+                str = str & "<tr id='" & Account.AccountCode & "'>"
+                str = str & "<td><a href='home.aspx?AccountCode=" & Account.AccountCode & "' class='link' style='font-weight:bold' alt='Account Code: " & Account.AccountCode & "' title='Account Code: " & Account.AccountCode & "'>" & Account.AccountCode & "</a></td>"
+                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AppointmentLetter) & "' alt='Appointment Letter' title='Appointment Letter'>A</td>"
+                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.Inventory) & "' alt='Inventory' title='Inventory'>I</td>"
+                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AccountValidation) & "' alt='Account Validation' title='Account Validation'>R</td>"
+                str = str & "</tr>"
+
+            Else
+
+                str = str & "<tr><td colspan='4'>" & Account.Message & " </td></tr>"
+
+            End If
+
+        Next
+
+        str = str & "</table>"
 
         Return str
 
     End Function
 
-    'Converted to Stored Procedure - YES
-    'Pushed to Production - YES
-    Public Shared Function TrunkIdAndSerialNumber(ByVal Account As String) As String
-
-        Account = HtmlEncode(Account)
+    Public Shared Function ListOfManagersByAccount(ByVal Account As String) As List(Of ClassModels.Manager)
 
         Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
         'This SQLCommand needs to be the name of the stored procedure
-        Dim objCommand As New SqlCommand("SelectAccountAssets")
-
+        Dim objCommand As New SqlCommand("spSelectManagersByAccount")
         objCommand.CommandType = Data.CommandType.StoredProcedure
         objCommand.Connection = objConnection
 
-        Dim str As String = ""
-        Dim counter As Integer = 0
-        Dim rowColor As String = ""
+        Dim ListOfManagers As New List(Of ClassModels.Manager)
+        Dim ManagerError As New ClassModels.Manager
 
         Try
             'these parameters must match the paramters set in the stored procedure
             With objCommand.Parameters
-                .Add(New SqlParameter("@Account", Account))
+                .Add(New SqlParameter("@AccountCode", Account))
             End With
 
             objConnection.Open()
 
             Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
 
-            str = str & "<table id='TrunkAndSerialNumberTable' class='TrunkIDAndSerialNumberClass'><tr class='borderOnly'>" & _
-                "<th><b>Trunk ID</b></th>" & _
-                "<th><b>Serial Number</b></th>" & _
-                "</tr>"
+            If objDataReader.HasRows Then
 
-            While objDataReader.Read()
+                While objDataReader.Read()
 
-                If objDataReader("assetDisabled") = "Yes" Then
-                    'grayRow is a class defined on css/style.css
-                    rowColor = "grayRow"
-                ElseIf objDataReader("trunkID") = "0" And objDataReader("assetDisabled") <> "Yes" Then
-                    'lightRed is a class defined on css/style.css
-                    rowColor = "lightRed"
-                Else
-                    'borderOnly is a class defined on css/style.css
-                    rowColor = "borderOnly"
-                End If
-                str = str & "<tr id='TrunkSNRow_" & objDataReader("serialNum") & "' class='" & rowColor & "'>" & _
-                    "<td>" & objDataReader("trunkID").ToString & "</td>" & _
-                    "<td>" & objDataReader("serialNum").ToString & "</td>" & _
-                "</tr>"
+                    Dim Manager As New ClassModels.Manager(objDataReader("ID"))
+                    ListOfManagers.Add(Manager)
 
-                counter = counter + 1
-            End While
+                End While
 
-            str = str & "<tr id='AssetCount'>" & _
-                "<td><strong>Total: </strong></td>" & _
-                "<td><strong>" & counter & " assets</strong></td>" & _
-            "</tr></table>"
+            Else
+
+                ManagerError.IsError = True
+                ManagerError.Message = "No manager records found for account " & Account & "!"
+                ListOfManagers.Add(ManagerError)
+
+            End If
 
             objDataReader.Close()
 
         Catch ex As Exception
-            str = "Error: " & ex.Message
+            ManagerError.IsError = True
+            ManagerError.Message = "Error: " & ex.Message
+            ListOfManagers.Add(ManagerError)
         Finally
             objConnection.Close()
         End Try
 
+        Return ListOfManagers
+
+    End Function
+
+    Public Shared Function ListOfAssetsByAccount(ByVal Account As String) As List(Of ClassModels.Asset)
+
+        Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+        'This SQLCommand needs to be the name of the stored procedure
+        Dim objCommand As New SqlCommand("spSelectAssetsByAccount")
+        objCommand.CommandType = Data.CommandType.StoredProcedure
+        objCommand.Connection = objConnection
+
+        Dim ListOfAssets As New List(Of ClassModels.Asset)
+        Dim AssetError As New ClassModels.Asset
+
+        Try
+            'these parameters must match the paramters set in the stored procedure
+            With objCommand.Parameters
+                .Add(New SqlParameter("@AccountCode", Account))
+            End With
+
+            objConnection.Open()
+
+            Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
+
+            If objDataReader.HasRows Then
+
+                While objDataReader.Read()
+
+                    Dim Asset As New ClassModels.Asset(objDataReader("ID"))
+                    ListOfAssets.Add(Asset)
+
+                End While
+
+            Else
+
+                AssetError.IsError = True
+                AssetError.Message = "No records found for account " & Account & "!"
+                ListOfAssets.Add(AssetError)
+
+            End If
+
+            objDataReader.Close()
+
+        Catch ex As Exception
+            AssetError.IsError = True
+            AssetError.Message = "Error: " & ex.Message
+            ListOfAssets.Add(AssetError)
+        Finally
+            objConnection.Close()
+        End Try
+
+        Return ListOfAssets
+
+    End Function
+
+    Public Shared Function TrunkIdAndSerialNumberDisplay(ByVal Account As String) As String
+
+        Dim ListOfAssets As New List(Of ClassModels.Asset)
+        ListOfAssets = WebServiceFunctions.ListOfAssetsByAccount(Account)
+
+        Dim str As String = ""
+        Dim RowColor As String = ""
+        Dim Counter As Integer = 0
+
+        str = str & "<table id='TrunkAndSerialNumberTable' class='TrunkIDAndSerialNumberClass'>"
+        str = str & "<tr class='borderOnly'>"
+        str = str & "<th><b>Trunk ID</b></th>"
+        str = str & "<th><b>Serial Number</b></th>"
+        str = str & "</tr>"
+
+        For Each Asset In ListOfAssets
+            If Asset.IsError = False Then
+                If Asset.AssetDisabled = True Then
+                    'grayRow is a class defined on css/style.css
+                    RowColor = "grayRow"
+                ElseIf Asset.TrunkID = "0" And Asset.AssetDisabled <> True Then
+                    'lightRed is a class defined on css/style.css
+                    RowColor = "lightRed"
+                Else
+                    'borderOnly is a class defined on css/style.css
+                    RowColor = "borderOnly"
+                End If
+
+                str = str & "<tr id='TrunkSNRow_" & Asset.SerialNumber.ToString & "' class='" & RowColor & "'>"
+                str = str & "<td>" & Asset.TrunkID.ToString & "</td>"
+                str = str & "<td>" & Asset.SerialNumber.ToString & "</td>"
+                str = str & "</tr>"
+
+                Counter = Counter + 1
+            Else
+                str = str & "<tr><td colspan='2'>" & Asset.Message & "</td></tr>"
+            End If
+            
+        Next
+
+        str = str & "<tr id='AssetCount'>"
+        str = str & "<td><strong>Total: </strong></td>"
+        str = str & "<td><strong>" & Counter.ToString & " assets</strong></td>"
+        str = str & "</tr>"
+        str = str & "</table>"
+
         Return str
 
     End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    'Converted to Stored Procedure - YES
+    'Pushed to Production - YES
+    'Public Shared Function TrunkIdAndSerialNumber(ByVal Account As String) As String
+
+    '    Account = HtmlEncode(Account)
+
+    '    Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+    '    'This SQLCommand needs to be the name of the stored procedure
+    '    Dim objCommand As New SqlCommand("SelectAccountAssets")
+
+    '    objCommand.CommandType = Data.CommandType.StoredProcedure
+    '    objCommand.Connection = objConnection
+
+    '    Dim str As String = ""
+    '    Dim counter As Integer = 0
+    '    Dim rowColor As String = ""
+
+    '    Try
+    '        'these parameters must match the paramters set in the stored procedure
+    '        With objCommand.Parameters
+    '            .Add(New SqlParameter("@Account", Account))
+    '        End With
+
+    '        objConnection.Open()
+
+    '        Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
+
+    '        str = str & "<table id='TrunkAndSerialNumberTable' class='TrunkIDAndSerialNumberClass'><tr class='borderOnly'>" & _
+    '            "<th><b>Trunk ID</b></th>" & _
+    '            "<th><b>Serial Number</b></th>" & _
+    '            "</tr>"
+
+    '        While objDataReader.Read()
+
+    '            If objDataReader("assetDisabled") = "Yes" Then
+    '                'grayRow is a class defined on css/style.css
+    '                rowColor = "grayRow"
+    '            ElseIf objDataReader("trunkID") = "0" And objDataReader("assetDisabled") <> "Yes" Then
+    '                'lightRed is a class defined on css/style.css
+    '                rowColor = "lightRed"
+    '            Else
+    '                'borderOnly is a class defined on css/style.css
+    '                rowColor = "borderOnly"
+    '            End If
+    '            str = str & "<tr id='TrunkSNRow_" & objDataReader("serialNum") & "' class='" & rowColor & "'>" & _
+    '                "<td>" & objDataReader("trunkID").ToString & "</td>" & _
+    '                "<td>" & objDataReader("serialNum").ToString & "</td>" & _
+    '            "</tr>"
+
+    '            counter = counter + 1
+    '        End While
+
+    '        str = str & "<tr id='AssetCount'>" & _
+    '            "<td><strong>Total: </strong></td>" & _
+    '            "<td><strong>" & counter & " assets</strong></td>" & _
+    '        "</tr></table>"
+
+    '        objDataReader.Close()
+
+    '    Catch ex As Exception
+    '        str = "Error: " & ex.Message
+    '    Finally
+    '        objConnection.Close()
+    '    End Try
+
+    '    Return str
+
+    'End Function
 
     'Converted to Stored Procedure - Yes
     'Pushed to Production - YES
