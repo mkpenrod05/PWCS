@@ -116,7 +116,7 @@ Public Class ClassModels
         Public Property Organization As String
         Public Property Phone As String
         Public Property Email As String
-        Public Property TrainingDate As Date
+        Public Property TrainingDate As Nullable(Of Date)
 
         'Default constructor which takes no arguments
         Public Sub New()

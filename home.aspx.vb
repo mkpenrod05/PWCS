@@ -20,6 +20,10 @@ Partial Class home
 
             AccountCodePlaceHolder.InnerText = Account.AccountCode
             AccountOrgPlaceHolder.InnerHtml = "<span id='Organization_" & Account.ID & "'>" & Account.Organization & "</span>"
+
+            ManagersInformationPlaceHolder.InnerHtml = WebServiceFunctions.ManagerInformationDisplay(AccountCode)
+
+            AccountInfoPlaceHolder.InnerHtml = WebServiceFunctions.AnnualRequirementsDisplay(Account)
         End If
 
     End Sub

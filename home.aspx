@@ -97,15 +97,16 @@
     <UserControl:PageHeader ID="PageHeader1" runat="server" />
     <UserControl:SiteNavigation ID="SiteNavigation1" runat="server" />
 
-    <div id="DivTopMessage" style="padding:5px;" runat="server"></div>
-    <div style="text-align:center;">
-        <p>
-            <input type="text" id="SerialNumberSearch" style="" runat="server" />
-        </p>
+    <div id="DivTopMessage" style="display:none;" runat="server"></div>
+    
+    <div style="text-align:center; margin-bottom:5px;">
+        Search:
+        <input type="text" id="SerialNumberSearch" class="k-textbox" style="" runat="server" />
+        <span class="Comment">(Serial Number or Trunk ID)</span>
     </div>
+    
     <div id="SerialNumberSearchDiv" style=""></div>
     <br />
-    
     <div id="AccountListContainer" class="k-block" style="float:left; margin-right:5px;">
         <div class="k-header" style="text-align:center; font-weight:bold;">
             Accounts
@@ -138,20 +139,34 @@
     
     <div class="O-Auto">
         
-        <div id="ManagersInformationDiv" class="lightGrayBorder blankContainer" style="">
+        <div id="ManagersInformationDiv" class="lightGrayBorder" style="margin-bottom:5px;">
             <h4 style="line-height:0px; text-align:center;">Account Managers</h4>
-            <hr />
-
+            <div id="ManagersInformationPlaceHolder" runat="server"></div>
         </div>
 
         <div class="O-Auto">
-            <div id="AccountInfoDiv" class="lightGrayBorder blankContainer" style="margin:3px; float:left; height:300px;"></div>
-            <div id="AccountCommentsDiv" class="lightGrayBorder blankContainer O-Auto" style="margin:3px; min-width:300px; max-height:300px;"></div>
+
+            <div id="AccountInfoDiv" class="lightGrayBorder" style="float:left; height:300px; margin:0px 5px 5px 0px;">
+                <h4 style="line-height:0px; text-align:center;">Annual Requirements</h4>
+                <div id="AccountInfoPlaceHolder" runat="server"></div>
+            </div>
+
+            <div id="AccountCommentsDiv" class="lightGrayBorder blankContainer O-Auto" style="min-width:300px; max-height:300px;">
+                <h4 style="line-height:0px; text-align:center;">Account Comments</h4>
+                <div id="AccountCommentsPlaceHolder" runat="server"></div>
+            </div>
+
         </div>
 
-        <div id="SerialNumberInformationDiv" class="lightGrayBorder blankContainer" style="margin:3px;"></div>
+        <div id="AssetInformationDiv" class="lightGrayBorder" style="margin-bottom:5px;">
+            <h4 style="line-height:0px; text-align:center;">Asset Information</h4>
+            <div id="AssetInformationPlaceHolder" runat="server"></div>
+        </div>
         
-        <div id="SerialNumberMaintenanceHistoryDiv" class="lightGrayBorder blankContainer" style="margin:3px;"></div>
+        <div id="AssetMaintenanceHistoryDiv" class="lightGrayBorder" style="margin-bottom:5px;">
+            <h4 style="line-height:0px; text-align:center;">Maintenance History</h4>
+            <div id="AssetMaintenanceHistoryPlaceHolder" runat="server"></div>
+        </div>
         
     </div>
 

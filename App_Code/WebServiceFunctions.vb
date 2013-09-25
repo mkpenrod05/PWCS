@@ -276,7 +276,9 @@ Public Class WebServiceFunctions
         str = str & "</tr>"
 
         For Each Asset In ListOfAssets
+
             If Asset.IsError = False Then
+
                 If Asset.AssetDisabled = True Then
                     'grayRow is a class defined on css/style.css
                     RowColor = "grayRow"
@@ -310,11 +312,157 @@ Public Class WebServiceFunctions
 
     End Function
 
+    Public Shared Function ListOfManagers(ByVal AccountCode As String) As List(Of ClassModels.Manager)
 
+        Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+        'This SQLCommand needs to be the name of the stored procedure
+        Dim objCommand As New SqlCommand("spSelectManagersByAccount")
+        objCommand.CommandType = Data.CommandType.StoredProcedure
+        objCommand.Connection = objConnection
 
+        Dim ListOfAssets As New List(Of ClassModels.Manager)
+        Dim AssetError As New ClassModels.Manager
 
+        Try
+            'these parameters must match the paramters set in the stored procedure
+            With objCommand.Parameters
+                .Add(New SqlParameter("@AccountCode", AccountCode))
+            End With
 
+            objConnection.Open()
 
+            Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
+
+            If objDataReader.HasRows Then
+
+                While objDataReader.Read()
+
+                    Dim Asset As New ClassModels.Manager(objDataReader("ID"))
+                    ListOfAssets.Add(Asset)
+
+                End While
+
+            Else
+
+                AssetError.IsError = True
+                AssetError.Message = "No managers were found for this account!"
+                ListOfAssets.Add(AssetError)
+
+            End If
+
+            objDataReader.Close()
+
+        Catch ex As Exception
+            AssetError.IsError = True
+            AssetError.Message = "Error: " & ex.Message
+            ListOfAssets.Add(AssetError)
+        Finally
+            objConnection.Close()
+        End Try
+
+        Return ListOfAssets
+
+    End Function
+
+    Public Shared Function ManagerInformationDisplay(ByVal AccountCode As String) As String
+
+        Dim ListOfManagers As New List(Of ClassModels.Manager)
+        ListOfManagers = WebServiceFunctions.ListOfManagers(AccountCode)
+
+        Dim str As String = ""
+
+        str = str & "<table id='ManagersInformationTable' class='MainStyle Center-Wide'>"
+        str = str & "<tr>"
+        str = str & "<th style=''><b>Position</b></th>"
+        str = str & "<th style=''><b>Rank</b></th>"
+        str = str & "<th style=''><b>First Name</b></th>"
+        str = str & "<th style=''><b>Last Name</b></th>"
+        str = str & "<th style=''><b>Organization</b></th>"
+        str = str & "<th style=''><b>Phone</b></th>"
+        str = str & "<th style=''><b>Email</b></th>"
+        str = str & "<th style=''><b>Training Date</b></th>"
+        str = str & "</tr>"
+
+        For Each Manager In ListOfManagers
+
+            If Manager.IsError = False Then
+
+                str = str & "<tr>" & _
+                    "<td><span id='position_" & Manager.ID & "'>" & Manager.Position & "</span>" & _
+                        "<a id='DeleteManager_" & Manager.ID & "' style='float:right;' class='ui-icon ui-icon-circle-close' alt='Delete Manager' title='Delete Manager'></a></td>" & _
+                    "<td><span id='rank_" & Manager.ID & "'>" & Manager.Rank & "</span></td>" & _
+                    "<td><span id='fname_" & Manager.ID & "'>" & Manager.FirstName & "</span></td>" & _
+                    "<td><span id='lname_" & Manager.ID & "'>" & Manager.LastName & "</span></td>" & _
+                    "<td><span id='org_" & Manager.ID & "'>" & Manager.Organization & "</span></td>" & _
+                    "<td><span id='phone_" & Manager.ID & "'>" & Manager.Phone & "</span></td>" & _
+                    "<td><span id='email_" & Manager.ID & "'>" & Manager.Email & "</span></td>" & _
+                    "<td class='" & Manager.TrainingDate & "'>" & _
+                        "<span id='trained_" & Manager.ID & "'>" & Manager.TrainingDate & "</span></td>" & _
+                    "</tr>"
+            Else
+
+                str = str & "<tr><td colspan='8'>" & Manager.Message & "</td></tr>"
+
+            End If
+
+        Next
+
+        str = str & "</table>"
+        str = str & "<div style='padding:5px;'>"
+        str = str & "<div style='width:150px; margin-left:auto; margin-right:auto;'>"
+        str = str & "<p style='text-align:center;'>"
+        str = str & "<input type='button' id='addManager' class='k-button' value='Add Manager' />"
+        str = str & "</p>"
+        str = str & "</div>"
+        str = str & "</div>"
+
+        Return str
+
+    End Function
+
+    Public Shared Function AnnualRequirementsDisplay(ByVal Account As ClassModels.Account) As String
+
+        Dim str As String = ""
+
+        str = str & "<table class='MainStyle Center-Wide'>"
+
+        str = str & "<tr>"
+        str = str & "<th>Annual Requirement</th>"
+        str = str & "<th width=''>Current</th>"
+        str = str & "<th width=''>1st Email</th>"
+        str = str & "<th width=''>2nd Email</th>"
+        str = str & "<th width=''>3rd Email</th>"
+        str = str & "</tr>"
+
+        str = str & "<tr>"
+        str = str & "<td><b>Appointment Letter</b></td>"
+        str = str & "<td><span id='AppointmentLetter_" & Account.ID & "'>" & Account.AppointmentLetter & "</span></td>"
+        str = str & "<td><span id='EmailAppointmentLetter1_" & Account.ID & "'>" & Account.EmailAppointmentLetter1 & "</span></td>"
+        str = str & "<td><span id='EmailAppointmentLetter2_" & Account.ID & "'>" & Account.EmailAppointmentLetter2 & "</span></td>"
+        str = str & "<td><span id='EmailAppointmentLetter3_" & Account.ID & "'>" & Account.EmailAppointmentLetter3 & "</span></td>"
+        str = str & "</tr>"
+
+        str = str & "<tr>"
+        str = str & "<td><b>Inventory</b></td>"
+        str = str & "<td><span id='Inventory_" & Account.ID & "'>" & Account.Inventory & "</span></td>"
+        str = str & "<td><span id='EmailInventory1_" & Account.ID & "'>" & Account.EmailInventory1 & "</span></td>"
+        str = str & "<td><span id='EmailInventory2_" & Account.ID & "'>" & Account.EmailInventory2 & "</span></td>"
+        str = str & "<td><span id='EmailInventory3_" & Account.ID & "'>" & Account.EmailInventory3 & "</span></td>"
+        str = str & "</tr>"
+
+        str = str & "<tr>"
+        str = str & "<td><b>Account Validation</b></td>"
+        str = str & "<td><span id='AccountValidation_" & Account.ID & "'>" + Account.AccountValidation & "</span></td>"
+        str = str & "<td><span id='EmailAccountValidation1_" & Account.ID & "'>" & Account.EmailAccountValidation1 & "</span></td>"
+        str = str & "<td><span id='EmailAccountValidation2_" & Account.ID & "'>" & Account.EmailAccountValidation2 & "</span></td>"
+        str = str & "<td><span id='EmailAccountValidation3_" & Account.ID & "'>" & Account.EmailAccountValidation3 & "</span></td>"
+        str = str & "</tr>"
+
+        str = str & "</table>"
+
+        Return str
+
+    End Function
 
 
 
@@ -707,82 +855,82 @@ Public Class WebServiceFunctions
 
     End Function
 
-    Public Shared Function ManagersInformation(ByVal Account As String) As String
+    'Public Shared Function ManagersInformation(ByVal Account As String) As String
 
-        Account = HtmlEncode(Account)
+    '    Account = HtmlEncode(Account)
 
-        Dim objConnection As System.Data.SqlClient.SqlConnection
-        objConnection = New System.Data.SqlClient.SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
-        Dim objCommand As System.Data.SqlClient.SqlCommand
-        Dim strSQLQuery As String
-        'strSQLQuery = "SELECT * FROM [PWCS].[dbo].[assets] INNER JOIN [PWCS].[dbo].[accounts] ON [assets].account = [accounts].account_code WHERE account = @Account ORDER BY aims_sn"
-        strSQLQuery = "SELECT * FROM managers WHERE account_code = @Account AND active = 'True' ORDER BY position DESC"
+    '    Dim objConnection As System.Data.SqlClient.SqlConnection
+    '    objConnection = New System.Data.SqlClient.SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+    '    Dim objCommand As System.Data.SqlClient.SqlCommand
+    '    Dim strSQLQuery As String
+    '    'strSQLQuery = "SELECT * FROM [PWCS].[dbo].[assets] INNER JOIN [PWCS].[dbo].[accounts] ON [assets].account = [accounts].account_code WHERE account = @Account ORDER BY aims_sn"
+    '    strSQLQuery = "SELECT * FROM managers WHERE account_code = @Account AND active = 'True' ORDER BY position DESC"
 
-        Dim str As String = ""
-        Dim TrainedDate As String = ""
-        'Dim counter As Integer = 0
+    '    Dim str As String = ""
+    '    Dim TrainedDate As String = ""
+    '    'Dim counter As Integer = 0
 
-        Try
+    '    Try
 
-            objConnection.Open()
-            objCommand = New System.Data.SqlClient.SqlCommand(strSQLQuery, objConnection)
+    '        objConnection.Open()
+    '        objCommand = New System.Data.SqlClient.SqlCommand(strSQLQuery, objConnection)
 
-            With objCommand.Parameters
-                .Add(New System.Data.SqlClient.SqlParameter("@Account", Account.ToUpper))
-            End With
+    '        With objCommand.Parameters
+    '            .Add(New System.Data.SqlClient.SqlParameter("@Account", Account.ToUpper))
+    '        End With
 
-            Dim objDataReader As System.Data.SqlClient.SqlDataReader
-            objDataReader = objCommand.ExecuteReader(System.Data.CommandBehavior.CloseConnection)
+    '        Dim objDataReader As System.Data.SqlClient.SqlDataReader
+    '        objDataReader = objCommand.ExecuteReader(System.Data.CommandBehavior.CloseConnection)
 
-            str = str & "<p style='text-align:center;'><b>Account Managers</b><hr /><p>"
+    '        str = str & "<p style='text-align:center;'><b>Account Managers</b><hr /><p>"
 
-            str = str & "<table id='ManagersInformationTable' class='MainStyle' align='center' style='width:95%;'><tr>" & _
-                "<th style=''><b>Position</b></th>" & _
-                "<th style=''><b>Rank</b></th>" & _
-                "<th style=''><b>First Name</b></th>" & _
-                "<th style=''><b>Last Name</b></th>" & _
-                "<th style=''><b>Organization</b></th>" & _
-                "<th style=''><b>Phone</b></th>" & _
-                "<th style=''><b>Email</b></th>" & _
-                "<th style=''><b>Training Date</b></th>" & _
-                "</tr>"
+    '        str = str & "<table id='ManagersInformationTable' class='MainStyle' align='center' style='width:95%;'><tr>" & _
+    '            "<th style=''><b>Position</b></th>" & _
+    '            "<th style=''><b>Rank</b></th>" & _
+    '            "<th style=''><b>First Name</b></th>" & _
+    '            "<th style=''><b>Last Name</b></th>" & _
+    '            "<th style=''><b>Organization</b></th>" & _
+    '            "<th style=''><b>Phone</b></th>" & _
+    '            "<th style=''><b>Email</b></th>" & _
+    '            "<th style=''><b>Training Date</b></th>" & _
+    '            "</tr>"
 
-            While objDataReader.Read()
-                If IsDBNull(objDataReader("trained")) Then TrainedDate = "Null" Else TrainedDate = objDataReader("trained")
-                'CheckIsNull() is a user-defined function //Stan Holmes Awesome...
-                str = str & "<tr>" & _
-                "<td><span id='position_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("position").ToString) & "</span>" & _
-                    "<a id='DeleteManager_" & objDataReader("ID") & "' style='float:right;' class='ui-icon ui-icon-circle-close' alt='Delete Manager' title='Delete Manager'></a></td>" & _
-                "<td><span id='rank_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("rank").ToString) & "</span></td>" & _
-                "<td><span id='fname_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("fname").ToString) & "</span></td>" & _
-                "<td><span id='lname_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("lname").ToString) & "</span></td>" & _
-                "<td><span id='org_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("org").ToString) & "</span></td>" & _
-                "<td><span id='phone_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("phone").ToString) & "</span></td>" & _
-                "<td><span id='email_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("email").ToString) & "</span></td>" & _
-                "<td class='" & StyleChange.SetColor(objDataReader("trained").ToString) & "'>" & _
-                    "<span id='trained_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(TrainedDate) & "</span></td>" & _
-                "</tr>"
-            End While
-            str = str & "</table>" & _
-                "<div style='padding:5px;'>" & _
-                    "<div style='width:150px; margin-left:auto; margin-right:auto;'>" & _
-                        "<p style='text-align:center;'>" & _
-                            "<input id='addManager' type='button' value='Add Manager' />" & _
-                        "</p>" & _
-                    "</div>" & _
-                "</div>"
+    '        While objDataReader.Read()
+    '            If IsDBNull(objDataReader("trained")) Then TrainedDate = "Null" Else TrainedDate = objDataReader("trained")
+    '            'CheckIsNull() is a user-defined function //Stan Holmes Awesome...
+    '            str = str & "<tr>" & _
+    '            "<td><span id='position_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("position").ToString) & "</span>" & _
+    '                "<a id='DeleteManager_" & objDataReader("ID") & "' style='float:right;' class='ui-icon ui-icon-circle-close' alt='Delete Manager' title='Delete Manager'></a></td>" & _
+    '            "<td><span id='rank_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("rank").ToString) & "</span></td>" & _
+    '            "<td><span id='fname_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("fname").ToString) & "</span></td>" & _
+    '            "<td><span id='lname_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("lname").ToString) & "</span></td>" & _
+    '            "<td><span id='org_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("org").ToString) & "</span></td>" & _
+    '            "<td><span id='phone_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("phone").ToString) & "</span></td>" & _
+    '            "<td><span id='email_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(objDataReader("email").ToString) & "</span></td>" & _
+    '            "<td class='" & StyleChange.SetColor(objDataReader("trained").ToString) & "'>" & _
+    '                "<span id='trained_" & objDataReader("ID") & "'>" & CustomFunctions.CheckIsNull(TrainedDate) & "</span></td>" & _
+    '            "</tr>"
+    '        End While
+    '        str = str & "</table>" & _
+    '            "<div style='padding:5px;'>" & _
+    '                "<div style='width:150px; margin-left:auto; margin-right:auto;'>" & _
+    '                    "<p style='text-align:center;'>" & _
+    '                        "<input id='addManager' type='button' value='Add Manager' />" & _
+    '                    "</p>" & _
+    '                "</div>" & _
+    '            "</div>"
 
-            objDataReader.Close()
+    '        objDataReader.Close()
 
-        Catch ex As Exception
-            str = "Error: " & ex.Message
-        Finally
-            objConnection.Close()
-        End Try
+    '    Catch ex As Exception
+    '        str = "Error: " & ex.Message
+    '    Finally
+    '        objConnection.Close()
+    '    End Try
 
-        Return str
+    '    Return str
 
-    End Function
+    'End Function
 
     Public Shared Function SerialNumberInformation(ByVal SerialNum As String) As String
 
