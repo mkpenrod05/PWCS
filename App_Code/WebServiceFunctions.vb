@@ -3,6 +3,7 @@ Imports System.Data.SqlClient
 Imports System.Data.CommandBehavior
 Imports System.Web.HttpUtility
 Imports System.Web.Script.Serialization
+Imports System.Text
 
 
 Public Class WebServiceFunctions
@@ -137,9 +138,9 @@ Public Class WebServiceFunctions
 
                 str = str & "<tr id='" & Account.AccountCode & "'>"
                 str = str & "<td><a href='home.aspx?AccountCode=" & Account.AccountCode & "' class='link' style='font-weight:bold' alt='Account Code: " & Account.AccountCode & "' title='Account Code: " & Account.AccountCode & "'>" & Account.AccountCode & "</a></td>"
-                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AppointmentLetter) & "' alt='Appointment Letter' title='Appointment Letter'>A</td>"
-                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.Inventory) & "' alt='Inventory' title='Inventory'>I</td>"
-                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AccountValidation) & "' alt='Account Validation' title='Account Validation'>R</td>"
+                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AppointmentLetter).ToString & "' alt='Appointment Letter' title='Appointment Letter'>A</td>"
+                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.Inventory).ToString & "' alt='Inventory' title='Inventory'>I</td>"
+                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AccountValidation).ToString & "' alt='Account Validation' title='Account Validation'>R</td>"
                 str = str & "</tr>"
 
             Else
@@ -464,9 +465,89 @@ Public Class WebServiceFunctions
 
     End Function
 
+    Public Shared Function ListOfLogEvents(ByVal PageNumber As Integer, ByVal PageSize As Integer, ByVal ActionType As String, ByVal ColumnName As String, ByVal AffectedTableID As Integer, ByVal UniqueValue As String) As List(Of ClassModels.LogEvent)
 
+        Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
+        'This SQLCommand needs to be the name of the stored procedure
+        Dim objCommand As New SqlCommand("spSelectRecordsFromLog")
+        objCommand.CommandType = Data.CommandType.StoredProcedure
+        objCommand.Connection = objConnection
 
+        Dim LogEventsList As New List(Of ClassModels.LogEvent)
+        Dim LogEventError As New ClassModels.LogEvent
 
+        Try
+            'these parameters must match the paramters set in the stored procedure
+            With objCommand.Parameters
+                .Add(New SqlParameter("@PageNumber", PageNumber))
+                .Add(New SqlParameter("@PageSize", PageSize))
+                .Add(New SqlParameter("@ActionType", ActionType))
+                .Add(New SqlParameter("@ColumnName", ColumnName))
+                .Add(New SqlParameter("@AffectedTableID", AffectedTableID))
+                .Add(New SqlParameter("@UniqueValue", UniqueValue))
+            End With
+
+            objConnection.Open()
+
+            Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
+
+            If objDataReader.HasRows Then
+
+                While objDataReader.Read()
+
+                    Dim LogEvent As New ClassModels.LogEvent(objDataReader("ID"))
+                    LogEventsList.Add(LogEvent)
+
+                End While
+
+            Else
+
+                LogEventError.IsError = True
+                LogEventError.Message = "No events has been recorded for this action!"
+                LogEventsList.Add(LogEventError)
+
+            End If
+
+            objDataReader.Close()
+
+        Catch ex As Exception
+            LogEventError.IsError = True
+            LogEventError.Message = "Error: " & ex.Message
+            LogEventsList.Add(LogEventError)
+        Finally
+            objConnection.Close()
+        End Try
+
+        Return LogEventsList
+
+    End Function
+
+    Public Shared Function AccountCommentsDisplay(ByVal PageNumber As Integer, ByVal PageSize As Integer, ByVal AffectedTableID As Integer) As String
+
+        Dim ListOfLogEvents As New List(Of ClassModels.LogEvent)
+        Dim Html As New StringBuilder("")
+        Dim Count As Integer = 0
+
+        ListOfLogEvents = WebServiceFunctions.ListOfLogEvents(PageNumber, PageSize, "Account Update", "account_comments", AffectedTableID, "")
+
+        Html.Append("<div>")
+
+        For Each LogEvent In ListOfLogEvents
+
+            Html.Append("<div>")
+            Html.Append("<div id='' class='' style='float:left; padding:2px;'>" & LogEvent.ModifiedDate & "</div>")
+            Html.Append("<div id='' class='' style='float:right; padding:2px;'>Added By: " & LogEvent.ModifiedBy & "</div>")
+            Html.Append("<div id='' class='Seperator' style='clear:both;'></div>")
+            Html.Append("<div id='' class='' style='padding:2px 2px 10px 10px;'>" & LogEvent.NewValue & "</div>")
+            Html.Append("</div>")
+
+        Next
+
+        Html.Append("</div>")
+
+        Return Html.ToString
+
+    End Function
 
 
 

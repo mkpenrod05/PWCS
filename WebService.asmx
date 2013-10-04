@@ -41,7 +41,7 @@ Public Class WebService
     
     <WebMethod()> _
     Public Function ManagersInformation(ByVal Account As String) As String
-        Return WebServiceFunctions.ManagersInformation(Account)
+        'Return WebServiceFunctions.ManagersInformation(Account)
     End Function
     
     <WebMethod()> _
