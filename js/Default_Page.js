@@ -364,13 +364,11 @@ function GetSerialNumberMaintenanceHistory(SN) {
     });
 } //end of GetSerialNumberMaintenanceHistory() function
 
-function GetSerialNumberSearch(value) {
+function GetSerialNumberSearch(SearchValue, SearchConstraint) {
     jQuery.ajax({
         url: "WebService.asmx/SerialNumberSearch",
         type: "POST",
-        //data: "{UserName:'" + $("#UserNameAdd").attr('value') + "', Reason:'" + $("#Reason").attr('value') + "', AccessType:'" + $("#AccessType").attr('value') + "', TargetSystem:'" + $("#TargetSystem").attr('value') + "', ClientSystem:'" + $("#ClientSystem").attr('value') + "', RemedyTicket:'" + $("#RemedyTicket").attr('value') + "', ReturnDate:'" + $("#ReturnDate").attr('value') + "'}",
-        //data: "{Account:'" + $("#SerialNumberSearch").attr('value') + "'}",
-        data: "{Value:'" + value + "'}",
+        data: "{SearchValue:'" + SearchValue + "', SearchConstraint:'" + SearchConstraint + "'}",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         cache: false,

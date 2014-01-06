@@ -16,8 +16,6 @@ Partial Class home
             TrunkIdAndSerialNumberDiv.InnerHtml = WebServiceFunctions.TrunkIdAndSerialNumberDisplay(Account.AccountCode)
             TrunkIdAndSerialNumberContainer.Style.Remove("display")
 
-            'AccountHeading.InnerHtml = Account.AccountCode & " - " & Account.Organization
-
             AccountCodePlaceHolder.InnerText = Account.AccountCode
             AccountOrgPlaceHolder.InnerHtml = "<span id='Organization_" & Account.ID & "'>" & Account.Organization & "</span>"
 

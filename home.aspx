@@ -29,6 +29,10 @@
             var Height = $("#AccountsListDiv").height();
             $("#TrunkIdAndSerialNumberDiv").height(Height);
 
+            //Initialize the search constraint drop down menu to a kendo drop down. This will help keep the look and feel
+            //throughout the site.
+            $("#SerialNumberSearchConstraint").kendoDropDownList();
+
             //This works...
             $("[id^='Organization_']").eip("WebService.asmx/AccountInfoUpdate", { form_type: "text" });
 
@@ -75,13 +79,15 @@
             $("#SerialNumberSearchDiv").hide();
 
             $("#SerialNumberSearch").keyup(function () {
-                var value = $(this).prop("value");
-                if (value.length >= 1) {
-                    //alert(value);
-                    $("#SerialNumberSearchDiv").show();
-                    GetSerialNumberSearch(value);
+                var SearchValue = $(this).prop("value");
+                var SearchConstraint = $("#SerialNumberSearchConstraint").prop("value");
+
+                if (SearchValue.length >= 1) {
+                    //alert(SearchConstraint);
+                    GetSerialNumberSearch(SearchValue, SearchConstraint);
+                    $("#SerialNumberSearchDiv").show("fast");
                 } else {
-                    $("#SerialNumberSearchDiv").hide();
+                    $("#SerialNumberSearchDiv").hide("fast");
                 }
             }); //end "#SerialNumberSearch" keyup function
 
@@ -102,6 +108,11 @@
     <div style="text-align:center; margin-bottom:5px;">
         Search:
         <input type="text" id="SerialNumberSearch" class="k-textbox" style="" runat="server" />
+        <select id="SerialNumberSearchConstraint">
+            <option value="Contains">Contains</option>
+            <option value="StartsWith">Starts With</option>
+            <option value="EndsWith">Ends With</option>
+        </select>
         <span class="Comment">(Serial Number or Trunk ID)</span>
     </div>
     

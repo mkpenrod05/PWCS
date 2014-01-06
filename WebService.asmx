@@ -30,8 +30,8 @@ Public Class WebService
     End Function
     
     <WebMethod()> _
-    Public Function SerialNumberSearch(ByVal Value As String) As String
-        Return WebServiceFunctions.SerialNumberSearch(Value)
+    Public Function SerialNumberSearch(ByVal SearchValue As String, ByVal SearchConstraint As String) As String
+        Return WebServiceFunctions.SerialNumberSearch(SearchValue, SearchConstraint)
     End Function
     
     <WebMethod()> _

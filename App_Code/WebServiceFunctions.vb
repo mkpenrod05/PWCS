@@ -126,34 +126,34 @@ Public Class WebServiceFunctions
     Public Shared Function AccountListDisplay() As String
 
         Dim ListOfAccounts As New List(Of ClassModels.Account)
-        Dim str As String = ""
+        Dim Html As New StringBuilder()
 
         ListOfAccounts = WebServiceFunctions.AccountListRevised
 
-        str = str & "<table id='AccountListTable' class='AccountListTableClass'>"
+        Html.Append("<table id='AccountListTable' class='AccountListTableClass'>")
 
         For Each Account In ListOfAccounts
 
             If Account.IsError = False Then
 
-                str = str & "<tr id='" & Account.AccountCode & "'>"
-                str = str & "<td><a href='home.aspx?AccountCode=" & Account.AccountCode & "' class='link' style='font-weight:bold' alt='Account Code: " & Account.AccountCode & "' title='Account Code: " & Account.AccountCode & "'>" & Account.AccountCode & "</a></td>"
-                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AppointmentLetter).ToString & "' alt='Appointment Letter' title='Appointment Letter'>A</td>"
-                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.Inventory).ToString & "' alt='Inventory' title='Inventory'>I</td>"
-                str = str & "<td class='SmallFont " & StyleChange.SetColor(Account.AccountValidation).ToString & "' alt='Account Validation' title='Account Validation'>R</td>"
-                str = str & "</tr>"
+                Html.Append("<tr id='" & Account.AccountCode & "'>")
+                Html.Append("<td><a href='home.aspx?AccountCode=" & Account.AccountCode & "' class='link' style='font-weight:bold' alt='Account Code: " & Account.AccountCode & "' title='Account Code: " & Account.AccountCode & "'>" & Account.AccountCode & "</a></td>")
+                Html.Append("<td class='SmallFont " & StyleChange.SetColor(Account.AppointmentLetter).ToString & "' alt='Appointment Letter' title='Appointment Letter'>A</td>")
+                Html.Append("<td class='SmallFont " & StyleChange.SetColor(Account.Inventory).ToString & "' alt='Inventory' title='Inventory'>I</td>")
+                Html.Append("<td class='SmallFont " & StyleChange.SetColor(Account.AccountValidation).ToString & "' alt='Account Validation' title='Account Validation'>R</td>")
+                Html.Append("</tr>")
 
             Else
 
-                str = str & "<tr><td colspan='4'>" & Account.Message & " </td></tr>"
+                Html.Append("<tr><td colspan='4'>" & Account.Message & " </td></tr>")
 
             End If
 
         Next
 
-        str = str & "</table>"
+        Html.Append("</table>")
 
-        Return str
+        Return Html.ToString
 
     End Function
 
@@ -266,15 +266,15 @@ Public Class WebServiceFunctions
         Dim ListOfAssets As New List(Of ClassModels.Asset)
         ListOfAssets = WebServiceFunctions.ListOfAssetsByAccount(Account)
 
-        Dim str As String = ""
+        Dim Html As New StringBuilder()
         Dim RowColor As String = ""
         Dim Counter As Integer = 0
 
-        str = str & "<table id='TrunkAndSerialNumberTable' class='TrunkIDAndSerialNumberClass'>"
-        str = str & "<tr class='borderOnly'>"
-        str = str & "<th><b>Trunk ID</b></th>"
-        str = str & "<th><b>Serial Number</b></th>"
-        str = str & "</tr>"
+        Html.Append("<table id='TrunkAndSerialNumberTable' class='TrunkIDAndSerialNumberClass'>")
+        Html.Append("<tr class='borderOnly'>")
+        Html.Append("<th><b>Trunk ID</b></th>")
+        Html.Append("<th><b>Serial Number</b></th>")
+        Html.Append("</tr>")
 
         For Each Asset In ListOfAssets
 
@@ -291,25 +291,25 @@ Public Class WebServiceFunctions
                     RowColor = "borderOnly"
                 End If
 
-                str = str & "<tr id='TrunkSNRow_" & Asset.SerialNumber.ToString & "' class='" & RowColor & "'>"
-                str = str & "<td>" & Asset.TrunkID.ToString & "</td>"
-                str = str & "<td>" & Asset.SerialNumber.ToString & "</td>"
-                str = str & "</tr>"
+                Html.Append("<tr id='TrunkSNRow_" & Asset.SerialNumber.ToString & "' class='" & RowColor & "'>")
+                Html.Append("<td>" & Asset.TrunkID.ToString & "</td>")
+                Html.Append("<td>" & Asset.SerialNumber.ToString & "</td>")
+                Html.Append("</tr>")
 
                 Counter = Counter + 1
             Else
-                str = str & "<tr><td colspan='2'>" & Asset.Message & "</td></tr>"
+                Html.Append("<tr><td colspan='2'>" & Asset.Message & "</td></tr>")
             End If
             
         Next
 
-        str = str & "<tr id='AssetCount'>"
-        str = str & "<td><strong>Total: </strong></td>"
-        str = str & "<td><strong>" & Counter.ToString & " assets</strong></td>"
-        str = str & "</tr>"
-        str = str & "</table>"
+        Html.Append("<tr id='AssetCount'>")
+        Html.Append("<td><strong>Total: </strong></td>")
+        Html.Append("<td><strong>" & Counter.ToString & " assets</strong></td>")
+        Html.Append("</tr>")
+        Html.Append("</table>")
 
-        Return str
+        Return Html.ToString
 
     End Function
 
@@ -370,98 +370,95 @@ Public Class WebServiceFunctions
         Dim ListOfManagers As New List(Of ClassModels.Manager)
         ListOfManagers = WebServiceFunctions.ListOfManagers(AccountCode)
 
-        Dim str As String = ""
+        Dim Html As New StringBuilder()
 
-        str = str & "<table id='ManagersInformationTable' class='MainStyle Center-Wide'>"
-        str = str & "<tr>"
-        str = str & "<th style=''><b>Position</b></th>"
-        str = str & "<th style=''><b>Rank</b></th>"
-        str = str & "<th style=''><b>First Name</b></th>"
-        str = str & "<th style=''><b>Last Name</b></th>"
-        str = str & "<th style=''><b>Organization</b></th>"
-        str = str & "<th style=''><b>Phone</b></th>"
-        str = str & "<th style=''><b>Email</b></th>"
-        str = str & "<th style=''><b>Training Date</b></th>"
-        str = str & "</tr>"
+        Html.Append("<table id='ManagersInformationTable' class='MainStyle Center-Wide'>")
+        Html.Append("<tr>")
+        Html.Append("<th style=''><b>Position</b></th>")
+        Html.Append("<th style=''><b>Rank</b></th>")
+        Html.Append("<th style=''><b>First Name</b></th>")
+        Html.Append("<th style=''><b>Last Name</b></th>")
+        Html.Append("<th style=''><b>Organization</b></th>")
+        Html.Append("<th style=''><b>Phone</b></th>")
+        Html.Append("<th style=''><b>Email</b></th>")
+        Html.Append("<th style=''><b>Training Date</b></th>")
+        Html.Append("</tr>")
 
         For Each Manager In ListOfManagers
 
             If Manager.IsError = False Then
-
-                str = str & "<tr>" & _
-                    "<td><span id='position_" & Manager.ID & "'>" & Manager.Position & "</span>" & _
-                        "<a id='DeleteManager_" & Manager.ID & "' style='float:right;' class='ui-icon ui-icon-circle-close' alt='Delete Manager' title='Delete Manager'></a></td>" & _
-                    "<td><span id='rank_" & Manager.ID & "'>" & Manager.Rank & "</span></td>" & _
-                    "<td><span id='fname_" & Manager.ID & "'>" & Manager.FirstName & "</span></td>" & _
-                    "<td><span id='lname_" & Manager.ID & "'>" & Manager.LastName & "</span></td>" & _
-                    "<td><span id='org_" & Manager.ID & "'>" & Manager.Organization & "</span></td>" & _
-                    "<td><span id='phone_" & Manager.ID & "'>" & Manager.Phone & "</span></td>" & _
-                    "<td><span id='email_" & Manager.ID & "'>" & Manager.Email & "</span></td>" & _
-                    "<td class='" & Manager.TrainingDate & "'>" & _
-                        "<span id='trained_" & Manager.ID & "'>" & Manager.TrainingDate & "</span></td>" & _
-                    "</tr>"
+                Html.Append("<tr>")
+                Html.Append("<td><span id='position_" & Manager.ID & "'>" & Manager.Position & "</span>")
+                Html.Append("<a id='DeleteManager_" & Manager.ID & "' style='float:right;' class='ui-icon ui-icon-circle-close' alt='Delete Manager' title='Delete Manager'></a></td>")
+                Html.Append("<td><span id='rank_" & Manager.ID & "'>" & Manager.Rank & "</span></td>")
+                Html.Append("<td><span id='fname_" & Manager.ID & "'>" & Manager.FirstName & "</span></td>")
+                Html.Append("<td><span id='lname_" & Manager.ID & "'>" & Manager.LastName & "</span></td>")
+                Html.Append("<td><span id='org_" & Manager.ID & "'>" & Manager.Organization & "</span></td>")
+                Html.Append("<td><span id='phone_" & Manager.ID & "'>" & Manager.Phone & "</span></td>")
+                Html.Append("<td><span id='email_" & Manager.ID & "'>" & Manager.Email & "</span></td>")
+                Html.Append("<td class='" & Manager.TrainingDate & "'>")
+                Html.Append("<span id='trained_" & Manager.ID & "'>" & Manager.TrainingDate & "</span></td>")
+                Html.Append("</tr>")
             Else
-
-                str = str & "<tr><td colspan='8'>" & Manager.Message & "</td></tr>"
-
+                Html.Append("<tr><td colspan='8'>" & Manager.Message & "</td></tr>")
             End If
 
         Next
 
-        str = str & "</table>"
-        str = str & "<div style='padding:5px;'>"
-        str = str & "<div style='width:150px; margin-left:auto; margin-right:auto;'>"
-        str = str & "<p style='text-align:center;'>"
-        str = str & "<input type='button' id='addManager' class='k-button' value='Add Manager' />"
-        str = str & "</p>"
-        str = str & "</div>"
-        str = str & "</div>"
+        Html.Append("</table>")
+        Html.Append("<div style='padding:5px;'>")
+        Html.Append("<div style='width:150px; margin-left:auto; margin-right:auto;'>")
+        Html.Append("<p style='text-align:center;'>")
+        Html.Append("<input type='button' id='addManager' class='k-button' value='Add Manager' />")
+        Html.Append("</p>")
+        Html.Append("</div>")
+        Html.Append("</div>")
 
-        Return str
+        Return Html.ToString
 
     End Function
 
     Public Shared Function AnnualRequirementsDisplay(ByVal Account As ClassModels.Account) As String
 
-        Dim str As String = ""
+        Dim Html As New StringBuilder()
 
-        str = str & "<table class='MainStyle Center-Wide'>"
+        Html.Append("<table class='MainStyle Center-Wide'>")
 
-        str = str & "<tr>"
-        str = str & "<th>Annual Requirement</th>"
-        str = str & "<th width=''>Current</th>"
-        str = str & "<th width=''>1st Email</th>"
-        str = str & "<th width=''>2nd Email</th>"
-        str = str & "<th width=''>3rd Email</th>"
-        str = str & "</tr>"
+        Html.Append("<tr>")
+        Html.Append("<th>Annual Requirement</th>")
+        Html.Append("<th width=''>Current</th>")
+        Html.Append("<th width=''>1st Email</th>")
+        Html.Append("<th width=''>2nd Email</th>")
+        Html.Append("<th width=''>3rd Email</th>")
+        Html.Append("</tr>")
 
-        str = str & "<tr>"
-        str = str & "<td><b>Appointment Letter</b></td>"
-        str = str & "<td><span id='AppointmentLetter_" & Account.ID & "'>" & Account.AppointmentLetter & "</span></td>"
-        str = str & "<td><span id='EmailAppointmentLetter1_" & Account.ID & "'>" & Account.EmailAppointmentLetter1 & "</span></td>"
-        str = str & "<td><span id='EmailAppointmentLetter2_" & Account.ID & "'>" & Account.EmailAppointmentLetter2 & "</span></td>"
-        str = str & "<td><span id='EmailAppointmentLetter3_" & Account.ID & "'>" & Account.EmailAppointmentLetter3 & "</span></td>"
-        str = str & "</tr>"
+        Html.Append("<tr>")
+        Html.Append("<td><b>Appointment Letter</b></td>")
+        Html.Append("<td><span id='AppointmentLetter_" & Account.ID & "'>" & Account.AppointmentLetter & "</span></td>")
+        Html.Append("<td><span id='EmailAppointmentLetter1_" & Account.ID & "'>" & Account.EmailAppointmentLetter1 & "</span></td>")
+        Html.Append("<td><span id='EmailAppointmentLetter2_" & Account.ID & "'>" & Account.EmailAppointmentLetter2 & "</span></td>")
+        Html.Append("<td><span id='EmailAppointmentLetter3_" & Account.ID & "'>" & Account.EmailAppointmentLetter3 & "</span></td>")
+        Html.Append("</tr>")
 
-        str = str & "<tr>"
-        str = str & "<td><b>Inventory</b></td>"
-        str = str & "<td><span id='Inventory_" & Account.ID & "'>" & Account.Inventory & "</span></td>"
-        str = str & "<td><span id='EmailInventory1_" & Account.ID & "'>" & Account.EmailInventory1 & "</span></td>"
-        str = str & "<td><span id='EmailInventory2_" & Account.ID & "'>" & Account.EmailInventory2 & "</span></td>"
-        str = str & "<td><span id='EmailInventory3_" & Account.ID & "'>" & Account.EmailInventory3 & "</span></td>"
-        str = str & "</tr>"
+        Html.Append("<tr>")
+        Html.Append("<td><b>Inventory</b></td>")
+        Html.Append("<td><span id='Inventory_" & Account.ID & "'>" & Account.Inventory & "</span></td>")
+        Html.Append("<td><span id='EmailInventory1_" & Account.ID & "'>" & Account.EmailInventory1 & "</span></td>")
+        Html.Append("<td><span id='EmailInventory2_" & Account.ID & "'>" & Account.EmailInventory2 & "</span></td>")
+        Html.Append("<td><span id='EmailInventory3_" & Account.ID & "'>" & Account.EmailInventory3 & "</span></td>")
+        Html.Append("</tr>")
 
-        str = str & "<tr>"
-        str = str & "<td><b>Account Validation</b></td>"
-        str = str & "<td><span id='AccountValidation_" & Account.ID & "'>" + Account.AccountValidation & "</span></td>"
-        str = str & "<td><span id='EmailAccountValidation1_" & Account.ID & "'>" & Account.EmailAccountValidation1 & "</span></td>"
-        str = str & "<td><span id='EmailAccountValidation2_" & Account.ID & "'>" & Account.EmailAccountValidation2 & "</span></td>"
-        str = str & "<td><span id='EmailAccountValidation3_" & Account.ID & "'>" & Account.EmailAccountValidation3 & "</span></td>"
-        str = str & "</tr>"
+        Html.Append("<tr>")
+        Html.Append("<td><b>Account Validation</b></td>")
+        Html.Append("<td><span id='AccountValidation_" & Account.ID & "'>" + Account.AccountValidation & "</span></td>")
+        Html.Append("<td><span id='EmailAccountValidation1_" & Account.ID & "'>" & Account.EmailAccountValidation1 & "</span></td>")
+        Html.Append("<td><span id='EmailAccountValidation2_" & Account.ID & "'>" & Account.EmailAccountValidation2 & "</span></td>")
+        Html.Append("<td><span id='EmailAccountValidation3_" & Account.ID & "'>" & Account.EmailAccountValidation3 & "</span></td>")
+        Html.Append("</tr>")
 
-        str = str & "</table>"
+        Html.Append("</table>")
 
-        Return str
+        Return Html.ToString
 
     End Function
 
@@ -525,7 +522,7 @@ Public Class WebServiceFunctions
     Public Shared Function AccountCommentsDisplay(ByVal PageNumber As Integer, ByVal PageSize As Integer, ByVal AffectedTableID As Integer) As String
 
         Dim ListOfLogEvents As New List(Of ClassModels.LogEvent)
-        Dim Html As New StringBuilder("")
+        Dim Html As New StringBuilder()
         Dim Count As Integer = 0
 
         ListOfLogEvents = WebServiceFunctions.ListOfLogEvents(PageNumber, PageSize, "Account Update", "account_comments", AffectedTableID, "")
@@ -664,31 +661,40 @@ Public Class WebServiceFunctions
 
     'Converted to Stored Procedure - Yes
     'Pushed to Production - YES
-    Public Shared Function SerialNumberSearch(ByVal Value As String) As String
+    Public Shared Function SerialNumberSearch(ByVal SearchValue As String, ByVal SearchConstraint As String) As String
 
-        Value = HtmlEncode(Value)
+        SearchValue = HtmlEncode(SearchValue.ToUpper)
+        SearchConstraint = HtmlEncode(SearchConstraint)
 
         Dim objConnection As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("PWCS_DBConn").ConnectionString)
         'This SQLCommand needs to be the name of the stored procedure
         Dim objCommand As New SqlCommand("SearchAllAssets")
-
         objCommand.CommandType = Data.CommandType.StoredProcedure
         objCommand.Connection = objConnection
 
-        Dim str As String = ""
+        Dim Html As New StringBuilder()
         Dim TrClass As String = ""
+        Dim SearchCriteria As String = ""
+
+        If SearchConstraint = "Contains" Then
+            SearchCriteria = "%" & SearchValue & "%"
+        ElseIf SearchConstraint = "StartsWith" Then
+            SearchCriteria = SearchValue & "%"
+        ElseIf SearchConstraint = "EndsWith" Then
+            SearchCriteria = "%" & SearchValue
+        End If
 
         Try
             'these parameters must match the paramters set in the stored procedure
             With objCommand.Parameters
-                .Add(New SqlParameter("@Value", "%" & Value & "%"))
+                .Add(New SqlParameter("@Value", SearchCriteria))
             End With
 
             objConnection.Open()
 
             Dim objDataReader As SqlDataReader = objCommand.ExecuteReader(CloseConnection)
 
-            str = str & "<div class='lightGrayBorder' style=''>" & _
+            Html.Append("<div class='lightGrayBorder' style=''>" & _
             "<table id='SNID' class='SearchResultsTable' align='center'><tr>" & _
             "<th id='SNID_Account'><b>Account</b></th>" & _
             "<th id='SNID_TrunkID'><b>Trunk ID</b></th>" & _
@@ -698,42 +704,47 @@ Public Class WebServiceFunctions
             "<th><b>Model Description</b></th>" & _
             "<th><b>Asset Comments</b></th>" & _
             "<th><b>Status</b></th>" & _
-            "</tr>"
+            "</tr>")
 
             While objDataReader.Read()
+                Dim TrunkID As String = objDataReader("trunkID")
+                Dim SerialNumber As String = objDataReader("serialNum")
+
+                TrunkID = TrunkID.Replace(SearchValue, "<span style='background-color:Yellow;'>" & SearchValue & "</span>")
+                SerialNumber = SerialNumber.Replace(SearchValue, "<span style='background-color:Yellow;'>" & SearchValue & "</span>")
 
                 If objDataReader("status") = "Archived" Then
                     'We're giving this row a fake ID to avoid breaking our jQuery in the Default_Page.js file
                     'and we are adding this style to show the user that this row cannot be clicked on.
-                    str = str & "<tr id='FAKE_' style='background-color:#FF9999; cursor:default;'>"
+                    Html.Append("<tr id='FAKE_' style='background-color:#FF9999; cursor:default;'>")
                 Else
-                    str = str & "<tr id='" & objDataReader("account") & "_" & objDataReader("serialNum") & "'>"
+                    Html.Append("<tr id='" & objDataReader("account") & "_" & objDataReader("serialNum") & "'>")
                 End If
 
-                str = str & "<td>" & CustomFunctions.CheckIsNull(objDataReader("account").ToString) & "</td>" & _
-                    "<td>" & CustomFunctions.CheckIsNull(objDataReader("trunkID").ToString) & _
-                        "<a id='ViewTrunkLog_" & objDataReader("trunkID") & "' style='float:right;' class='ui-icon ui-icon-clipboard' alt='View Log' title='View Log'></a></td>" & _
-                    "<td>" & CustomFunctions.CheckIsNull(objDataReader("trunkIDRange").ToString) & "</td>" & _
-                    "<td>" & CustomFunctions.CheckIsNull(objDataReader("serialNum").ToString) & "</td>" & _
-                    "<td>" & CustomFunctions.CheckIsNull(objDataReader("modelNum").ToString) & "</td>" & _
-                    "<td>" & CustomFunctions.CheckIsNull(objDataReader("modelDesc").ToString) & "</td>" & _
-                    "<td>" & CustomFunctions.CheckIsNull(objDataReader("assetComments").ToString) & "</td>" & _
-                    "<td>" & objDataReader("status") & "</td>"
-                str = str & "</tr>"
+                Html.Append("<td>" & CustomFunctions.CheckIsNull(objDataReader("account").ToString) & "</td>")
+                Html.Append("<td>" & TrunkID)
+                Html.Append("<a id='ViewTrunkLog_" & objDataReader("trunkID") & "' style='float:right;' class='ui-icon ui-icon-clipboard' alt='View Log' title='View Log'></a></td>")
+                Html.Append("<td>" & CustomFunctions.CheckIsNull(objDataReader("trunkIDRange").ToString) & "</td>")
+                Html.Append("<td>" & SerialNumber & "</td>")
+                Html.Append("<td>" & CustomFunctions.CheckIsNull(objDataReader("modelNum").ToString) & "</td>")
+                Html.Append("<td>" & CustomFunctions.CheckIsNull(objDataReader("modelDesc").ToString) & "</td>")
+                Html.Append("<td>" & CustomFunctions.CheckIsNull(objDataReader("assetComments").ToString) & "</td>")
+                Html.Append("<td>" & objDataReader("status") & "</td>")
+                Html.Append("</tr>")
 
             End While
 
             objDataReader.Close()
 
-            str = str & "</table></div>"
+            Html.Append("</table></div>")
 
         Catch ex As Exception
-            str = "Error: " & ex.Message
+            Html.Append("Error: " & ex.Message)
         Finally
             objConnection.Close()
         End Try
 
-        Return str
+        Return Html.ToString
 
     End Function
 

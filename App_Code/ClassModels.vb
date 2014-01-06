@@ -7,7 +7,7 @@ Public Class ClassModels
     Public Class ErrorCheck
         Public Property Message As String
         Public Property IsError As Boolean
-        Public Property NullDate As String = "Empty"
+        'Public Property NullDate As String = "Empty"
     End Class
 
     Public Class Account
